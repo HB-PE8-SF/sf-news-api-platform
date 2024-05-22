@@ -4,14 +4,21 @@ namespace App\DataFixtures;
 
 use App\Entity\Article;
 use App\Entity\Category;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
     private const CATEGORIES_NAMES = ["Voyage", "Sport", "Actualité", "Cuisine"];
     private const ARTICLES_NB = 50;
+
+    public function __construct(
+        private UserPasswordHasherInterface $hasher
+    ) {
+    }
 
     public function load(ObjectManager $manager): void
     {
@@ -39,6 +46,18 @@ class AppFixtures extends Fixture
 
             $manager->persist($article);
         }
+
+        $user = new User();
+        $user
+            ->setUsername("bobbydu69")
+            ->setPassword(
+                $this->hasher->hashPassword(
+                    $user,
+                    "bobby"
+                )
+            );
+
+        $manager->persist($user);
 
         $manager->flush();
     }
