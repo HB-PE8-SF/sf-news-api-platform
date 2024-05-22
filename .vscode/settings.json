@@ -1,0 +1,18 @@
+{
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default",
+        "enableSsl": "Disabled"
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3640,
+      "driver": "MySQL",
+      "name": "hb_pe8_api_platform",
+      "database": "hb_pe8_api_platform",
+      "username": "root",
+      "password": "mysqltests"
+    }
+  ]
+}
