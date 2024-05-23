@@ -3,8 +3,9 @@
 namespace App\DataFixtures;
 
 use App\Entity\Article;
+use App\Entity\Author;
 use App\Entity\Category;
-use App\Entity\User;
+use App\Entity\Reader;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
@@ -24,6 +25,7 @@ class AppFixtures extends Fixture
     {
         $faker = Factory::create('fr_FR');
 
+        // --- CATÉGORIES ---
         $categories = [];
 
         foreach (self::CATEGORIES_NAMES as $categoryName) {
@@ -34,6 +36,29 @@ class AppFixtures extends Fixture
             $manager->persist($category);
         }
 
+        // --- AUTEUR ---
+        $author = new Author();
+        $author
+            ->setUsername("bobbydu69")
+            ->setPassword(
+                $this->hasher->hashPassword(
+                    $author,
+                    "bobby"
+                )
+            );
+
+        $manager->persist($author);
+
+        // --- LECTEUR ---
+        $reader = new Reader();
+        $reader
+            ->setUsername("Jean-lit")
+            ->setFavoriteCategory($faker->randomElement($categories))
+            ->setPassword($this->hasher->hashPassword($reader, "jean"));
+
+        $manager->persist($reader);
+
+        // --- ARTICLES ---
         for ($i = 0; $i < self::ARTICLES_NB; $i++) {
             $article = new Article();
             $article
@@ -42,22 +67,11 @@ class AppFixtures extends Fixture
                 // TODO: EventSubscriber
                 ->setCreatedAt(new \DateTimeImmutable())
                 ->setVisible($faker->boolean(70))
-                ->setCategory($faker->randomElement($categories));
+                ->setCategory($faker->randomElement($categories))
+                ->setAuthor($author);
 
             $manager->persist($article);
         }
-
-        $user = new User();
-        $user
-            ->setUsername("bobbydu69")
-            ->setPassword(
-                $this->hasher->hashPassword(
-                    $user,
-                    "bobby"
-                )
-            );
-
-        $manager->persist($user);
 
         $manager->flush();
     }

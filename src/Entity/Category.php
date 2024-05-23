@@ -27,9 +27,16 @@ class Category
     #[ORM\OneToMany(targetEntity: Article::class, mappedBy: 'category', orphanRemoval: true)]
     private Collection $articles;
 
+    /**
+     * @var Collection<int, Reader>
+     */
+    #[ORM\OneToMany(targetEntity: Reader::class, mappedBy: 'favoriteCategory')]
+    private Collection $readers;
+
     public function __construct()
     {
         $this->articles = new ArrayCollection();
+        $this->readers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -73,6 +80,36 @@ class Category
             // set the owning side to null (unless already changed)
             if ($article->getCategory() === $this) {
                 $article->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reader>
+     */
+    public function getReaders(): Collection
+    {
+        return $this->readers;
+    }
+
+    public function addReader(Reader $reader): static
+    {
+        if (!$this->readers->contains($reader)) {
+            $this->readers->add($reader);
+            $reader->setFavoriteCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReader(Reader $reader): static
+    {
+        if ($this->readers->removeElement($reader)) {
+            // set the owning side to null (unless already changed)
+            if ($reader->getFavoriteCategory() === $this) {
+                $reader->setFavoriteCategory(null);
             }
         }
 
