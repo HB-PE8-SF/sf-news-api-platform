@@ -2,12 +2,14 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ApiResource(normalizationContext: ['groups' => ['users:read']])]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn('discr', 'string')]
@@ -21,11 +23,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['authors:read'])]
+    #[Groups(['authors:read', 'users:read'])]
     protected ?int $id = null;
 
     #[ORM\Column(length: 180)]
-    #[Groups(['authors:read'])]
+    #[Groups(['authors:read', 'users:read'])]
     protected ?string $username = null;
 
     /**

@@ -17,7 +17,7 @@ class Author extends User
      * @var Collection<int, Article>
      */
     #[ORM\OneToMany(targetEntity: Article::class, mappedBy: 'author', orphanRemoval: true)]
-    #[Groups(['authors:read'])]
+    #[Groups(['authors:read', 'users:read'])]
     private Collection $articles;
 
     public function __construct()

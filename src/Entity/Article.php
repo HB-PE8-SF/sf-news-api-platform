@@ -15,11 +15,11 @@ class Article
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['articles:read', 'authors:read'])]
+    #[Groups(['articles:read', 'authors:read', 'users:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['articles:read', 'authors:read'])]
+    #[Groups(['articles:read', 'authors:read', 'users:read'])]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
